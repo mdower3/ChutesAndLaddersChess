@@ -20,6 +20,7 @@ class Board {
     AI enemy2;
     
     int turn;
+    LinkedList<ChuteLadder> chutesNLadders;
     
     
     
@@ -83,6 +84,7 @@ class Board {
             board[i] = new Pawn(-1);
         }
         
+        
         board[(length * 12) + 14] = new Rook(1);
         board[(length * 12) + 15] = new Knight(1);
         board[(length * 12) + 16] = new Bishop(1);
@@ -111,41 +113,109 @@ class Board {
             result += board[i].getValue() + " ";
             }
         }
-        
+
         return result;
     }
-    
+
     public String toStringBorders() {
         String result = "";
-        
-        for(int i = 0; i < board.length; i++) {
-            
-            if(i % 12 == 0) result += "\n";
-            
-                     
+
+        for (int i = 0; i < board.length; i++) {
+
+            if (i % 12 == 0) {
+                result += "\n";
+            }
+
             result += board[i].getValue() + " ";
-            
+
         }
-        
+
         return result;
     }
-    
-    public Board(int length) {
+
+    public Board(int length, int difficulty) {
         this.length = length;
-        Tile [] board = new Tile[(length * 12) + 48];
-        
-        for(int i = 0; i < 24; i++) board[i] = new Border();
-        for(int i = 24; i < (length * 12) + 24; i++) {
-            if(i % 12 == 0 || i % 12 == 11 ||
-               i % 12 == 1 || i % 12 == 10) {
+        Tile[] board = new Tile[(length * 12) + 48];
+
+        for (int i = 0; i < 24; i++) {
+            board[i] = new Border();
+        }
+        for (int i = 24; i < (length * 12) + 24; i++) {
+            if (i % 12 == 0 || i % 12 == 11
+                    || i % 12 == 1 || i % 12 == 10) {
                 board[i] = new Border();
             } else {
                 board[i] = new Empty();
             }
         }
-        for(int i = (length * 12) + 24; i < (length * 12) + 48; i++) {
+        for (int i = (length * 12) + 24; i < (length * 12) + 48; i++) {
             board[i] = new Border();
         }
+
+        //chutes and ladders go here
+        chutesNLadders = new LinkedList();
+        if (difficulty != 0) {
+            int maxLadSli;
+            if(difficulty == 1) maxLadSli = (int) (Math.random() * ((length - 4) + 1)) + 2;
+            else maxLadSli = (int) (Math.random() * (length) +length);
+            System.out.println(maxLadSli);
+            int y, boardPos, type;
+            boolean occupied;
+            ChuteLadder temp;
+            
+            for (int i = 0; i <= maxLadSli; i++) {
+
+                do {
+                    occupied = false;
+                    y = (int) (Math.random() * (8 * (length - 4)));
+                    int row = ((y / 8) + 2) * 12;
+                    int column = y % 8;
+                    boardPos = row + column + 2;
+                    
+                    if (!chutesNLadders.isEmpty()) {
+                        for (ChuteLadder ladSli : chutesNLadders) {
+                            if (boardPos == ladSli.getEndpoint()) {
+                                occupied = true;
+                            }
+                            if (boardPos == ladSli.getPos()) {
+                                occupied = true;
+                            }
+                        }
+                    }
+
+                } while (occupied);
+
+                
+                do {
+                    occupied = false;
+                    type = (int) (Math.random() * 8);
+                    temp = new ChuteLadder(type, boardPos);
+                    
+                    if (!chutesNLadders.isEmpty()) {
+                        for (ChuteLadder ladSli : chutesNLadders) {
+                            
+                            if (temp.endpoint < 50) occupied = true;
+                            if (temp.endpoint > ((length) * 12) - 2) occupied = true;
+                            
+                            if (temp.endpoint == ladSli.getEndpoint()) {
+                                occupied = true;
+                            }
+                            if (temp.endpoint == ladSli.getPos()) {
+                                occupied = true;
+                            }
+
+                        }
+                    }
+                    
+                } while(occupied);
+                
+                
+                
+                chutesNLadders.add(new ChuteLadder(type, boardPos));
+            }
+
+        }
+        
         
         this.board = board;
         turn = 1;
@@ -153,5 +223,8 @@ class Board {
         
         
         initStart();
+        
+        
+        
     }
 }
