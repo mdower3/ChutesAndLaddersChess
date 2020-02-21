@@ -18,6 +18,6 @@ public interface Tile {
     
     public void setMoved();
     
-    public LinkedList<Integer> getMoves(Board board, int pos);
+    public LinkedList<Integer> getMoves(Board board, int pos, LinkedList<ChuteLadder> chutesNLadders);
     
 }

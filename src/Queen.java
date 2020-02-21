@@ -31,7 +31,7 @@ public class Queen  implements Tile{
     }
 
     @Override
-    public LinkedList<Integer> getMoves(Board board, int pos) {
+    public LinkedList<Integer> getMoves(Board board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
         LinkedList<Integer> moves = new LinkedList();
         
         int temp;
@@ -49,11 +49,18 @@ public class Queen  implements Tile{
                 moves.add(pos + temp);
                 if(board.board[pos + temp].getColor() == color * -1) break;
                 temp = temp + i;
+                
         }
             
             
         }
         
+        for(ChuteLadder chuteLadder : chutesNLadders) {
+            if(moves.contains(chuteLadder.pos) && board.board[chuteLadder.endpoint].getColor() != color) {
+                moves.remove(moves.indexOf(chuteLadder.pos));
+                moves.add(chuteLadder.endpoint);
+            }   
+        }
         
         return moves;
     }

@@ -32,7 +32,7 @@ public class Pawn implements Tile {
     }
 
     @Override
-    public LinkedList<Integer> getMoves(Board board, int pos) {
+    public LinkedList<Integer> getMoves(Board board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
         LinkedList<Integer> moves = new LinkedList();
         
         if(color == 1) {
@@ -45,6 +45,13 @@ public class Pawn implements Tile {
             if("Empty".equals(board.board[pos + 12].getName())) moves.add(pos + 12);
             if(board.board[pos + 13].getColor() == color * -1) moves.add(pos + 13);
             if(board.board[pos + 11].getColor() == color * -1) moves.add(pos + 11);
+        }
+        
+        for(ChuteLadder chuteLadder : chutesNLadders) {
+            if(moves.contains(chuteLadder.pos) && board.board[chuteLadder.endpoint].getColor() != color) {
+                moves.remove(moves.indexOf(chuteLadder.pos));
+                moves.add(chuteLadder.endpoint);
+            }   
         }
         return moves;
     }

@@ -34,7 +34,7 @@ class Board {
         for(int i = 26; i < (length * 12) - 26; i++) {
             if(board[i].getColor() == color) {
                 
-                pieceMoves = board[i].getMoves(this, i);
+                pieceMoves = board[i].getMoves(this, i, chutesNLadders);
                 
                 
                     for(int j = 0; j < pieceMoves.size(); j++) {
@@ -56,7 +56,7 @@ class Board {
     
     public boolean move(int oldSpot, int newSpot) {
         
-        if(board[oldSpot].getMoves(this, oldSpot).contains(newSpot)) {
+        if(board[oldSpot].getMoves(this, oldSpot, chutesNLadders).contains(newSpot)) {
             board[newSpot]  = board[oldSpot];
             board[oldSpot] = new Empty();
             turn *= -1;
@@ -67,6 +67,24 @@ class Board {
         
         
         return false;
+    }
+    
+    private boolean withinBoard(int space) {
+        /*
+        if(space < 50) return false;
+        if(space > length * 10) return false;
+        int [] outsiders = {0, 1, 10, 11};
+        for(int i = 0; i < outsiders.length; i++) {
+            if(space % 12 == outsiders[i]) return false;
+        }
+        return true;
+        */
+        
+        int x = (space % 12) - 2;
+        int y = (space - 2) / 12;
+        if(x < 8 && x >= 0 && y < length - 1 && y > 1) return true;
+        return false;
+        
     }
     
     public void initStart() {
@@ -156,8 +174,8 @@ class Board {
         chutesNLadders = new LinkedList();
         if (difficulty != 0) {
             int maxLadSli;
-            if(difficulty == 1) maxLadSli = (int) (Math.random() * ((length - 4) + 1)) + 2;
-            else maxLadSli = (int) (Math.random() * (length) +length);
+            if(difficulty == 1) maxLadSli = (int) (Math.random() * (length - 4)) + 3;
+            else maxLadSli = (int) (Math.random() * (length * 0.5) +length);
             System.out.println(maxLadSli);
             int y, boardPos, type;
             boolean occupied;
@@ -167,10 +185,12 @@ class Board {
 
                 do {
                     occupied = false;
-                    y = (int) (Math.random() * (8 * (length - 4)));
-                    int row = ((y / 8) + 2) * 12;
+                    y = (int) (Math.random() * (7 * (length - 4)));
+                    int row = ((y / 8) + 4) * 12;
                     int column = y % 8;
                     boardPos = row + column + 2;
+                    
+                    if(!withinBoard(boardPos)) occupied = true;
                     
                     if (!chutesNLadders.isEmpty()) {
                         for (ChuteLadder ladSli : chutesNLadders) {
@@ -188,14 +208,17 @@ class Board {
                 
                 do {
                     occupied = false;
-                    type = (int) (Math.random() * 8);
+                    type = (int) (Math.random() * 7);
                     temp = new ChuteLadder(type, boardPos);
                     
                     if (!chutesNLadders.isEmpty()) {
                         for (ChuteLadder ladSli : chutesNLadders) {
                             
                             if (temp.endpoint < 50) occupied = true;
-                            if (temp.endpoint > ((length) * 12) - 2) occupied = true;
+                            //if (temp.endpoint > ((length) * 12) - 2) occupied = true;
+                            
+                            
+                            if(!withinBoard(temp.endpoint)) occupied = true;
                             
                             if (temp.endpoint == ladSli.getEndpoint()) {
                                 occupied = true;
@@ -216,6 +239,10 @@ class Board {
 
         }
         
+        
+        for(ChuteLadder chuteLadder : chutesNLadders) {
+            System.out.println("From here: " + chuteLadder.pos + "  To here: " + chuteLadder.endpoint);
+        }
         
         this.board = board;
         turn = 1;

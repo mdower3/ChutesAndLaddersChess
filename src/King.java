@@ -37,7 +37,7 @@ public class King implements Tile{
     }
     
     @Override
-    public LinkedList<Integer> getMoves(Board board, int pos) {
+    public LinkedList<Integer> getMoves(Board board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
         LinkedList<Integer> moves = new LinkedList();
         
         int temp;
@@ -59,6 +59,12 @@ public class King implements Tile{
             
         }
         
+        for(ChuteLadder chuteLadder : chutesNLadders) {
+            if(moves.contains(chuteLadder.pos) && board.board[chuteLadder.endpoint].getColor() != color) {
+                moves.remove(moves.indexOf(chuteLadder.pos));
+                moves.add(chuteLadder.endpoint);
+            }   
+        }
         
         return moves;
     }
