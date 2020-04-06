@@ -29,13 +29,18 @@ public class Empty implements Tile{
     }
 
     @Override
-    public LinkedList<Integer> getMoves(Board board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
+    public LinkedList<Integer> getMoves(Tile [] board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
         return null;
     }
 
     @Override
     public void setMoved() {
         
+    }
+
+    @Override
+    public boolean getMoved() {
+        return false;
     }
     
 }

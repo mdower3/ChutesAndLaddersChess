@@ -13,6 +13,7 @@ import java.util.LinkedList;
  */
 public class Bishop implements Tile{
 
+    boolean moved;
     int color;
     
     @Override
@@ -27,11 +28,11 @@ public class Bishop implements Tile{
 
     @Override
     public int getValue() {
-        return color * 3;
+        return color * 30;
     }
 
     @Override
-    public LinkedList<Integer> getMoves(Board board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
+    public LinkedList<Integer> getMoves(Tile [] board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
         LinkedList<Integer> moves = new LinkedList();
         
         int temp;
@@ -43,11 +44,11 @@ public class Bishop implements Tile{
             
             temp = i;
             
-            while(!"Border".equals(board.board[pos + temp].getName()) &&
-                    board.board[pos + temp].getColor() != color) {
+            while(!"Border".equals(board[pos + temp].getName()) &&
+                    board[pos + temp].getColor() != color) {
                 
                 moves.add(pos + temp);
-                if(board.board[pos + temp].getColor() == color * -1) break;
+                if(board[pos + temp].getColor() == color * -1) break;
                 temp = temp + i;
         }
             
@@ -55,7 +56,7 @@ public class Bishop implements Tile{
         }
         
         for(ChuteLadder chuteLadder : chutesNLadders) {
-            if(moves.contains(chuteLadder.pos) && board.board[chuteLadder.endpoint].getColor() != color) {
+            if(moves.contains(chuteLadder.pos) && board[chuteLadder.endpoint].getColor() != color) {
                 moves.remove(moves.indexOf(chuteLadder.pos));
                 moves.add(chuteLadder.endpoint);
             }   
@@ -66,11 +67,17 @@ public class Bishop implements Tile{
     
     public Bishop(int color) {
         this.color = color;
+        moved = false;
     }
 
     @Override
     public void setMoved() {
-        
+        moved = true;
+    }
+
+    @Override
+    public boolean getMoved() {
+        return moved;
     }
     
 }

@@ -28,7 +28,7 @@ public class King implements Tile{
 
     @Override
     public int getValue() {
-        return color * 100;
+        return color * 900;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class King implements Tile{
     }
     
     @Override
-    public LinkedList<Integer> getMoves(Board board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
+    public LinkedList<Integer> getMoves(Tile [] board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
         LinkedList<Integer> moves = new LinkedList();
         
         int temp;
@@ -45,11 +45,23 @@ public class King implements Tile{
                              -1,        1,
                              11,  12,  13};
         
+        
+        
+        
+        /*
+        if(moved == false && !board.board[pos-4].getMoved() &&
+                "Empty".equals(board.board[pos-3].getName()) &&
+                "Empty".equals(board.board[pos-2].getName()) &&
+                "Empty".equals(board.board[pos-1].getName())) {
+            moves.add(pos - )
+        }
+        */
+
         for(int i = 0; i < possMoves.length; i++) {
-            if(!"Border".equals(board.board[pos + possMoves[i]].getName())) {
+            if(!"Border".equals(board[pos + possMoves[i]].getName())) {
                 
-                if(board.board[pos + possMoves[i]].getColor() != color &&
-                        !"Border".contains(board.board[pos + possMoves[i]].getName())) {
+                if(board[pos + possMoves[i]].getColor() != color &&
+                        !"Border".contains(board[pos + possMoves[i]].getName())) {
                 
                 moves.add(pos + possMoves[i]);
                 }
@@ -60,7 +72,7 @@ public class King implements Tile{
         }
         
         for(ChuteLadder chuteLadder : chutesNLadders) {
-            if(moves.contains(chuteLadder.pos) && board.board[chuteLadder.endpoint].getColor() != color) {
+            if(moves.contains(chuteLadder.pos) && board[chuteLadder.endpoint].getColor() != color) {
                 moves.remove(moves.indexOf(chuteLadder.pos));
                 moves.add(chuteLadder.endpoint);
             }   
@@ -73,6 +85,11 @@ public class King implements Tile{
     public King(int color) {
         this.color = color;
         this.moved = false;
+    }
+
+    @Override
+    public boolean getMoved() {
+        return moved;
     }
 
     

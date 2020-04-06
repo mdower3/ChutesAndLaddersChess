@@ -28,27 +28,29 @@ public class Pawn implements Tile {
 
     @Override
     public int getValue() {
-        return color * 1;
+        return color * 10;
     }
 
     @Override
-    public LinkedList<Integer> getMoves(Board board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
+    public LinkedList<Integer> getMoves(Tile [] board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
         LinkedList<Integer> moves = new LinkedList();
         
         if(color == 1) {
-            if("Empty".equals(board.board[pos - 24].getName()) && !moved) moves.add(pos - 24);
-            if("Empty".equals(board.board[pos - 12].getName())) moves.add(pos - 12);
-            if(board.board[pos - 13].getColor() == color * -1) moves.add(pos - 13);
-            if(board.board[pos - 11].getColor() == color * -1) moves.add(pos - 11);
+            if("Empty".equals(board[pos - 24].getName()) && !moved &&
+                    "Empty".equals(board[pos - 12].getName())) moves.add(pos - 24);
+            if("Empty".equals(board[pos - 12].getName())) moves.add(pos - 12);
+            if(board[pos - 13].getColor() == color * -1) moves.add(pos - 13);
+            if(board[pos - 11].getColor() == color * -1) moves.add(pos - 11);
         } else {
-            if("Empty".equals(board.board[pos + 24].getName()) && !moved) moves.add(pos + 24);
-            if("Empty".equals(board.board[pos + 12].getName())) moves.add(pos + 12);
-            if(board.board[pos + 13].getColor() == color * -1) moves.add(pos + 13);
-            if(board.board[pos + 11].getColor() == color * -1) moves.add(pos + 11);
+            if("Empty".equals(board[pos + 24].getName()) && !moved &&
+                    "Empty".equals(board[pos + 12].getName())) moves.add(pos + 24);
+            if("Empty".equals(board[pos + 12].getName())) moves.add(pos + 12);
+            if(board[pos + 13].getColor() == color * -1) moves.add(pos + 13);
+            if(board[pos + 11].getColor() == color * -1) moves.add(pos + 11);
         }
         
         for(ChuteLadder chuteLadder : chutesNLadders) {
-            if(moves.contains(chuteLadder.pos) && board.board[chuteLadder.endpoint].getColor() != color) {
+            if(moves.contains(chuteLadder.pos) && board[chuteLadder.endpoint].getColor() != color) {
                 moves.remove(moves.indexOf(chuteLadder.pos));
                 moves.add(chuteLadder.endpoint);
             }   
@@ -64,6 +66,11 @@ public class Pawn implements Tile {
     @Override
     public void setMoved() {
         moved = true;
+    }
+
+    @Override
+    public boolean getMoved() {
+        return moved;
     }
     
 }

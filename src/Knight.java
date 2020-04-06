@@ -27,11 +27,11 @@ public class Knight implements Tile{
 
     @Override
     public int getValue() {
-        return color * 3;
+        return color * 30;
     }
 
     @Override
-    public LinkedList<Integer> getMoves(Board board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
+    public LinkedList<Integer> getMoves(Tile [] board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
         
         LinkedList<Integer> moves = new LinkedList();
         
@@ -40,10 +40,10 @@ public class Knight implements Tile{
         
         
         for(int i = 0; i < possPos.length; i++) {
-            if(!"Border".equals(board.board[pos + possPos[i]].getName())) {
+            if(!"Border".equals(board[pos + possPos[i]].getName())) {
                 
-                if(board.board[pos + possPos[i]].getColor() != color &&
-                        !"Border".contains(board.board[pos + possPos[i]].getName())) {
+                if(board[pos + possPos[i]].getColor() != color &&
+                        !"Border".contains(board[pos + possPos[i]].getName())) {
                 
                 moves.add(pos + possPos[i]);
                 }
@@ -51,7 +51,7 @@ public class Knight implements Tile{
         }
         
         for(ChuteLadder chuteLadder : chutesNLadders) {
-            if(moves.contains(chuteLadder.pos) && board.board[chuteLadder.endpoint].getColor() != color) {
+            if(moves.contains(chuteLadder.pos) && board[chuteLadder.endpoint].getColor() != color) {
                 moves.remove(moves.indexOf(chuteLadder.pos));
                 moves.add(chuteLadder.endpoint);
             }   
@@ -67,7 +67,12 @@ public class Knight implements Tile{
 
     @Override
     public void setMoved() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+    }
+
+    @Override
+    public boolean getMoved() {
+        return true;
     }
     
 }

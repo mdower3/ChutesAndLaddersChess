@@ -95,9 +95,11 @@ public class BoardDisplay {
             moveIcon();
             System.out.println("moving: " + oldY + " " + oldX);
             System.out.println("to: " + selectY + " " + selectX);
-            board.move(coordsToBoard(oldY, oldX), coordsToBoard(selectY, selectX));
+            board.move(board.board, coordsToBoard(oldY, oldX), coordsToBoard(selectY, selectX));
 
-            if (board.turn == board.enemy1.color) {
+            
+            
+            if (board.enemy1 != null && board.turn == board.enemy1.color) {
                 int[] temp = board.enemy1.makeMove(board);
 
                 System.out.println("index 0: " + temp[0] + " index 1: " + temp[1] + " index 2: " + temp[2]);
@@ -112,7 +114,7 @@ public class BoardDisplay {
 
                 selectX = i;
                 selectY = j;
-                
+
             }
 
             return true;
@@ -123,37 +125,59 @@ public class BoardDisplay {
         }
 
         oldMoves.clear();
+        if (board.check != board.turn) {
+            if (board.board[coordsToBoard(i, j)]
+                    .getMoves(board.board, coordsToBoard(i, j), board.chutesNLadders) != null
+                    && board.board[coordsToBoard(i, j)].getColor() == board.turn) {
 
-        if (board.board[coordsToBoard(i, j)]
-                .getMoves(board, coordsToBoard(i, j), board.chutesNLadders) != null
-                && board.board[coordsToBoard(i, j)].getColor() == 1) {
-
-            tiles[i][j].setBackground(graySelect);
-            if ((i + j) % 2 == 0) {
-                tiles[i][j].setBackground(whiteSelect);
-            } else {
                 tiles[i][j].setBackground(graySelect);
-            }
+                if ((i + j) % 2 == 0) {
+                    tiles[i][j].setBackground(whiteSelect);
+                } else {
+                    tiles[i][j].setBackground(graySelect);
+                }
 
-            for (int z : board.board[coordsToBoard(i, j)]
-                    .getMoves(board, coordsToBoard(i, j), board.chutesNLadders)) {
-                
-                /*
+                for (int z : board.board[coordsToBoard(i, j)]
+                        .getMoves(board.board, coordsToBoard(i, j), board.chutesNLadders)) {
+
+                    /*
                 for(ChuteLadder chuteLadder: board.chutesNLadders) {
                     if(z == chuteLadder.endpoint) {
                         
                     }
                 }
-                */
-                
-                intToRowAndColumn(z);
-                System.out.println("possibleMoves x: " + x + "  y: " + y);
-                point = new Point(x, y);
-                oldMoves.add(point);
-                if ((x + y) % 2 == 0) {
-                    tiles[y][x].setBackground(whiteSelect);
-                } else {
-                    tiles[y][x].setBackground(graySelect);
+                     */
+                    intToRowAndColumn(z);
+                    System.out.println("possibleMoves x: " + x + "  y: " + y);
+                    point = new Point(x, y);
+                    oldMoves.add(point);
+                    if ((x + y) % 2 == 0) {
+                        tiles[y][x].setBackground(whiteSelect);
+                    } else {
+                        tiles[y][x].setBackground(graySelect);
+                    }
+
+                }
+            }
+        } else {
+            LinkedList<int[]> possMoves = board.listCheckMoves(board.turn);
+
+            for (int z = 0; z < possMoves.size(); z++) {
+                if (possMoves.get(z)[1] == coordsToBoard(i, j)) {
+                    if ((i + j) % 2 == 0) {
+                        tiles[i][j].setBackground(whiteSelect);
+                    } else {
+                        tiles[i][j].setBackground(graySelect);
+                    }
+
+                    intToRowAndColumn(possMoves.get(z)[2]);
+                    point = new Point(x, y);
+                    if ((x + y) % 2 == 0) {
+                        tiles[y][x].setBackground(whiteSelect);
+                    } else {
+                        tiles[y][x].setBackground(graySelect);
+                    }
+                    oldMoves.add(point);
                 }
 
             }
@@ -162,7 +186,9 @@ public class BoardDisplay {
         oldX = j;
         oldY = i;
         oldPoint = new Point(j, i);
-
+        
+        
+        
         frame.repaint();
         return false;
     }
@@ -278,39 +304,42 @@ public class BoardDisplay {
         c.weighty = 1;
         c.anchor = CENTER;
 
-        visualPieces[0][0].add(new JLabel(new ImageIcon("Images/RookB.png")), c);
-        visualPieces[0][1].add(new JLabel(new ImageIcon("Images/KnightB.png")), c);
-        visualPieces[0][2].add(new JLabel(new ImageIcon("Images/BishopB.png")), c);
-        visualPieces[0][3].add(new JLabel(new ImageIcon("Images/QueenB.png")), c);
-        visualPieces[0][4].add(new JLabel(new ImageIcon("Images/KingB.png")), c);
-        visualPieces[0][5].add(new JLabel(new ImageIcon("Images/BishopB.png")), c);
-        visualPieces[0][6].add(new JLabel(new ImageIcon("Images/KnightB.png")), c);
-        visualPieces[0][7].add(new JLabel(new ImageIcon("Images/RookB.png")), c);
+        visualPieces[0][0].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/RookB.png"))), c);
+        visualPieces[0][1].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/KnightB.png"))), c);
+        visualPieces[0][2].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/BishopB.png"))), c);
+        visualPieces[0][3].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/QueenB.png"))), c);
+        visualPieces[0][4].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/KingB.png"))), c);
+        visualPieces[0][5].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/BishopB.png"))), c);
+        visualPieces[0][6].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/KnightB.png"))), c);
+        visualPieces[0][7].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/RookB.png"))), c);
         for (int i = 0; i <= 7; i++) {
-            visualPieces[1][i].add(new JLabel(new ImageIcon("Images/PawnB.png")), c);
+            visualPieces[1][i].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/PawnB.png"))), c);
         }
 
-        visualPieces[length - 1][0].add(new JLabel(new ImageIcon("Images/RookW.png")), c);
-        //visualPieces[length - 1][1].add(new JLabel(new ImageIcon("Images/KnightW.png")), c);
-        visualPieces[length - 1][2].add(new JLabel(new ImageIcon("Images/BishopW.png")), c);
-        visualPieces[length - 1][3].add(new JLabel(new ImageIcon("Images/QueenW.png")), c);
-        visualPieces[length - 1][4].add(new JLabel(new ImageIcon("Images/KingW.png")), c);
-        visualPieces[length - 1][5].add(new JLabel(new ImageIcon("Images/BishopW.png")), c);
-        visualPieces[length - 1][6].add(new JLabel(new ImageIcon("Images/KnightW.png")), c);
-        visualPieces[length - 1][7].add(new JLabel(new ImageIcon("Images/RookW.png")), c);
+        visualPieces[length - 1][0].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/RookW.png"))), c);
+        visualPieces[length - 1][1].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/KnightW.png"))), c);
+        visualPieces[length - 1][2].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/BishopW.png"))), c);
+        visualPieces[length - 1][3].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/QueenW.png"))), c);
+        visualPieces[length - 1][4].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/KingW.png"))), c);
+        visualPieces[length - 1][5].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/BishopW.png"))), c);
+        visualPieces[length - 1][6].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/KnightW.png"))), c);
+        visualPieces[length - 1][7].add(new JLabel(new ImageIcon(this.getClass().getResource("resources/RookW.png"))), c);
 
         JLabel temp;
         for (int i = 0; i <= 7; i++) {
             //visualPieces[length - 2][i].add(new JLabel(new ImageIcon("Images/PawnW.png")), c);
-            temp = new JLabel(new ImageIcon("Images/PawnW.png"));
+            temp = new JLabel(new ImageIcon(this.getClass().getResource("resources/PawnW.png")));
             visualPieces[length - 2][i].add(temp, c);
             theBoard.setLayer(temp, 3);
         }
 
+        
+        /*
         temp = new JLabel(new ImageIcon("Images/KnightW.png"));
         visualPieces[length - 1][1].add(temp, c);
         theBoard.setLayer(temp, 1);
-
+        */
+        
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 if (visualPieces[i][j].getAccessibleContext().getAccessibleChildrenCount() != 0) {

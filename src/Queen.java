@@ -27,11 +27,11 @@ public class Queen  implements Tile{
 
     @Override
     public int getValue() {
-        return color * 9;
+        return color * 90;
     }
 
     @Override
-    public LinkedList<Integer> getMoves(Board board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
+    public LinkedList<Integer> getMoves(Tile [] board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
         LinkedList<Integer> moves = new LinkedList();
         
         int temp;
@@ -43,11 +43,11 @@ public class Queen  implements Tile{
             
             temp = i;
             
-            while(!"Border".equals(board.board[pos + temp].getName()) &&
-                    board.board[pos + temp].getColor() != color) {
+            while(!"Border".equals(board[pos + temp].getName()) &&
+                    board[pos + temp].getColor() != color) {
                 
                 moves.add(pos + temp);
-                if(board.board[pos + temp].getColor() == color * -1) break;
+                if(board[pos + temp].getColor() == color * -1) break;
                 temp = temp + i;
                 
         }
@@ -56,7 +56,7 @@ public class Queen  implements Tile{
         }
         
         for(ChuteLadder chuteLadder : chutesNLadders) {
-            if(moves.contains(chuteLadder.pos) && board.board[chuteLadder.endpoint].getColor() != color) {
+            if(moves.contains(chuteLadder.pos) && board[chuteLadder.endpoint].getColor() != color) {
                 moves.remove(moves.indexOf(chuteLadder.pos));
                 moves.add(chuteLadder.endpoint);
             }   
@@ -73,6 +73,11 @@ public class Queen  implements Tile{
     @Override
     public void setMoved() {
         
+    }
+
+    @Override
+    public boolean getMoved() {
+        return true;
     }
     
 }

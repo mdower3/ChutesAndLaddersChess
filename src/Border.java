@@ -29,7 +29,7 @@ public class Border implements Tile{
     }
 
     @Override
-    public LinkedList<Integer> getMoves(Board board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
+    public LinkedList<Integer> getMoves(Tile [] board, int pos, LinkedList<ChuteLadder> chutesNLadders) {
         return null;
     }
     
@@ -40,5 +40,10 @@ public class Border implements Tile{
     @Override
     public void setMoved() {
         
+    }
+
+    @Override
+    public boolean getMoved() {
+        return true;
     }
 }
