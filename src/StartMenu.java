@@ -233,6 +233,7 @@ public class StartMenu extends javax.swing.JFrame {
         }
         
         this.setVisible(false);
+        this.dispose();
         
         
     }//GEN-LAST:event_jButton1MouseReleased

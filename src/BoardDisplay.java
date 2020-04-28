@@ -27,7 +27,7 @@ import javax.swing.JPanel;
  */
 public class BoardDisplay {
 
-    private JFrame frame;
+    public JFrame frame;
     private JLayeredPane theBoard;
     final int WIDTH = 8;
 
@@ -97,9 +97,10 @@ public class BoardDisplay {
             System.out.println("to: " + selectY + " " + selectX);
             board.move(board.board, coordsToBoard(oldY, oldX), coordsToBoard(selectY, selectX));
 
-            
-            
             if (board.enemy1 != null && board.turn == board.enemy1.color) {
+
+               
+
                 int[] temp = board.enemy1.makeMove(board);
 
                 System.out.println("index 0: " + temp[0] + " index 1: " + temp[1] + " index 2: " + temp[2]);
@@ -115,6 +116,16 @@ public class BoardDisplay {
                 selectX = i;
                 selectY = j;
 
+            }
+
+            System.out.println("this happened for real");
+            if (board.check != 0) {
+                System.out.println("this happened");
+                if (board.listCheckMoves(board.turn) == null) {
+                    gameOver = true;
+                    GameOver gameOver = new GameOver(board.turn * -1, this);
+                    gameOver.setVisible(true);
+                }
             }
 
             return true;
@@ -140,13 +151,7 @@ public class BoardDisplay {
                 for (int z : board.board[coordsToBoard(i, j)]
                         .getMoves(board.board, coordsToBoard(i, j), board.chutesNLadders)) {
 
-                    /*
-                for(ChuteLadder chuteLadder: board.chutesNLadders) {
-                    if(z == chuteLadder.endpoint) {
-                        
-                    }
-                }
-                     */
+                    
                     intToRowAndColumn(z);
                     System.out.println("possibleMoves x: " + x + "  y: " + y);
                     point = new Point(x, y);
@@ -186,9 +191,7 @@ public class BoardDisplay {
         oldX = j;
         oldY = i;
         oldPoint = new Point(j, i);
-        
-        
-        
+
         frame.repaint();
         return false;
     }
@@ -208,8 +211,15 @@ public class BoardDisplay {
         theBoard.setLayer(visualPieces[selectY][selectX], DRAG_LAYER);
         deSelect();
         frame.repaint();
-        //NEED TO WORK HERE!!!!!
+        
+        
 
+    }
+    
+    
+    public void gameOver() {
+        frame.setVisible(false);
+        frame.dispose();
     }
 
     /**
@@ -334,11 +344,7 @@ public class BoardDisplay {
         }
 
         
-        /*
-        temp = new JLabel(new ImageIcon("Images/KnightW.png"));
-        visualPieces[length - 1][1].add(temp, c);
-        theBoard.setLayer(temp, 1);
-        */
+        
         
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < WIDTH; j++) {
@@ -348,10 +354,7 @@ public class BoardDisplay {
                 }
             }
         }
-        //layout.addLayoutComponent("", new JLabel(new ImageIcon("Images/ChutesNLadders/Ladder2x3ToRight.png")));
-
-        //squares[5][5].add(ladder, new Integer(2));
-        //theBoard.setLayer(ladder;
+        
         frame.repaint();
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

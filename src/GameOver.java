@@ -14,7 +14,7 @@ public class GameOver extends javax.swing.JDialog {
      * Creates new form GameOver
      */
     
-    Board board;
+    BoardDisplay board;
     public GameOver(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -29,7 +29,7 @@ public class GameOver extends javax.swing.JDialog {
         
     }
 
-    GameOver(int turn, Board board) {
+    GameOver(int turn, BoardDisplay board) {
         initComponents();
         if(turn == 1) jLabel2.setText("Black");
         else jLabel2.setText("White");
@@ -98,7 +98,10 @@ public class GameOver extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseReleased
-        
+        board.frame.dispose();
+        StartMenu startMenu = new StartMenu();
+        startMenu.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1MouseReleased
 
     /**

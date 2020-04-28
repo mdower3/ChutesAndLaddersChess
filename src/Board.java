@@ -73,11 +73,7 @@ class Board {
                         System.out.println(turn * -1 + " is in check");
                         
                         check = turn * -1;
-                        if(listCheckMoves(turn * -1).isEmpty()) {
-                            gameOver = true;
-                            GameOver gameOver = new GameOver(turn, this);
-                            gameOver.setVisible(true);
-                        }
+                        
 
                     }
                     
@@ -86,7 +82,7 @@ class Board {
             }
         }
         
-        if(check != 0) return null;
+        
         return possMoves;
     }
 
@@ -125,17 +121,14 @@ class Board {
                 }
             }
         }
-        turn = color;
+        
         
         if (checkMoves.size() > 0) {
             
             return checkMoves;
         }
         
-        gameOver = true;
         
-        GameOver gameOver = new GameOver(turn, this);
-        gameOver.setVisible(true);
         
         return null;
     }
@@ -283,7 +276,7 @@ class Board {
             board[i] = new Border();
         }
 
-        //chutes and ladders go here
+        
         chutesNLadders = new LinkedList();
         if (difficulty != 0) {
             int maxLadSli;
